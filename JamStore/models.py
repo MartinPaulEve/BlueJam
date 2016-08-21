@@ -20,10 +20,16 @@ class Jam(models.Model):
     # Metadata
     title = models.CharField(max_length=800)
     abstract = models.TextField()
-    keywords = models.CharField(max_length=1000, blank=True, null=True)
     license = models.ForeignKey('JamLicense', blank=True, null=True)
     page_numbers = models.CharField(max_length=20, blank=True, null=True)
     authors = models.ManyToManyField('JamAuthor', blank=True, related_name='authors')
+    doi = models.CharField(max_length=1000, blank=True, null=True)
+    url = models.CharField(max_length=1000, blank=True, null=True)
+    issue = models.IntegerField(default=1)
+    volume = models.IntegerField(default=1)
+
+    # this is a local identifier so that different instances of BlueJam can easily distinguish duplicates
+    jam_id = models.CharField(max_length=1000, blank=True, null=True)
 
     # Files
     files = models.ManyToManyField('JamFile', blank=True, related_name='files')

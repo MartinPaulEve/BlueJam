@@ -1,3 +1,5 @@
 from django.db import models
 
-# Create your models here.
+class JamSource(models.Model):
+    url = models.CharField(max_length=800)
+    source_type = models.CharField(max_length=800)

@@ -22,7 +22,7 @@ def identify_journal_type_by_oai(url):
 def import_ojs_article(**options):
     """ Imports a single article from an Open Journal Systems installation
 
-    :param options: a dictionary containing 'journal_id', 'user_id', 'url' and optionally a 'delete' flag
+    :param options: a dictionary containing 'journal_id' and a 'url'
     :return: None
     """
     journal = models.JamJournal.objects.get(pk=options['journal_id'])
@@ -34,7 +34,7 @@ def import_ojs_article(**options):
 def import_up_article(**options):
     """ Imports a single article from a Ubiquity Press installation
 
-    :param options: a dictionary containing 'journal_id', 'user_id', 'url' and optionally a 'delete' flag
+    :param options: a dictionary containing 'journal_id' and a 'url'
     :return: None
     """
     journal = models.JamJournal.objects.get(pk=options['journal_id'])
@@ -46,7 +46,7 @@ def import_up_article(**options):
 def import_oai(**options):
     """ Imports an OAI feed
 
-    :param options: a dictionary containing 'journal_id', 'user_id', 'url' and optionally a 'delete' flag
+    :param options: a dictionary containing 'journal_id' and 'url'
     :return: None
     """
     journal = models.JamJournal.objects.get(pk=options['journal_id'])

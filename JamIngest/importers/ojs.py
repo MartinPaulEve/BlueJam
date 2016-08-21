@@ -7,11 +7,10 @@ from JamIngest.importers import shared
 # note: URL to pass for import is http://journal.org/journal/oai/
 
 
-def import_article(journal, user, url):
+def import_article(journal, url):
     """ Import an Open Journal Systems article.
 
     :param journal: the journal to import to
-    :param user: the user who will own the file
     :param url: the URL of the article to import
     :return: None
     """
@@ -24,7 +23,7 @@ def import_article(journal, user, url):
         return
 
     # fetch basic metadata
-    new_article = shared.get_and_set_metadata(journal, soup_object, user, False, False)
+    new_article = shared.get_and_set_metadata(journal, soup_object, False, False)
 
     # get PDF and XML/HTML galleys
     pdf = shared.get_pdf_url(soup_object)
@@ -49,17 +48,16 @@ def import_article(journal, user, url):
         'HTML': html_contents
     }
 
-    shared.set_article_galleys_and_identifiers(doi, domain, galleys, new_article, url, user)
+    shared.set_article_galleys_and_identifiers(doi, domain, galleys, new_article, url)
 
     # save the article to the database
     new_article.save()
 
 
-def import_oai(journal, user, soup):
+def import_oai(journal, soup):
     """ Initiate an OAI import on an Open Journal Systems journal.
 
     :param journal: the journal to import to
-    :param user: the user who will own imported articles
     :param soup: the BeautifulSoup object of the OAI feed
     :return: None
     """
@@ -69,4 +67,4 @@ def import_oai(journal, user, soup):
         if identifier.contents[0].startswith('http'):
             print('Parsing {0}'.format(identifier.contents[0]))
 
-            import_article(journal, user, identifier.contents[0])
+            import_article(journal, identifier.contents[0])

@@ -40,11 +40,10 @@ def get_thumbnails(url):
     return id_href
 
 
-def import_article(journal, user, url, thumb_path=None):
+def import_article(journal, url, thumb_path=None):
     """ Import a Ubiquity Press article.
 
     :param journal: the journal to import to
-    :param user: the user who will own the file
     :param url: the URL of the article to import
     :param thumb_path: the base path for thumbnails
     :return: None
@@ -58,7 +57,7 @@ def import_article(journal, user, url, thumb_path=None):
         return
 
     # fetch basic metadata
-    new_article = shared.get_and_set_metadata(journal, soup_object, user, False, True)
+    new_article = shared.get_and_set_metadata(journal, soup_object, False, True)
 
     # get PDF and XML galleys
     pdf = shared.get_pdf_url(soup_object)
@@ -85,7 +84,7 @@ def import_article(journal, user, url, thumb_path=None):
         'HTML': html
     }
 
-    shared.set_article_galleys_and_identifiers(doi, domain, galleys, new_article, url, user)
+    shared.set_article_galleys_and_identifiers(doi, domain, galleys, new_article, url)
 
     # fetch thumbnails
     if thumb_path is not None:
@@ -93,8 +92,8 @@ def import_article(journal, user, url, thumb_path=None):
 
         try:
             filename, mime = shared.fetch_file(domain, thumb_path + "/" + url.split('.')[-1], "", 'graphic',
-                                               new_article, user)
-            shared.add_file(mime, 'graphic', 'Thumbnail', user, filename, new_article, thumbnail=True)
+                                               new_article)
+            shared.add_file(mime, 'graphic', 'Thumbnail', filename, new_article, thumbnail=True)
         except:
             print("Unable to import thumbnail. Recoverable error.")
 
@@ -102,15 +101,14 @@ def import_article(journal, user, url, thumb_path=None):
     new_article.save()
 
 
-def import_oai(journal, user, soup, domain):
+def import_oai(journal, soup, domain):
     """ Initiate an OAI import on a Ubiquity Press journal.
 
-        :param journal: the journal to import to
-        :param user: the user who will own imported articles
-        :param soup: the BeautifulSoup object of the OAI feed
-        :param domain: the domain of the journal (for extracing thumbnails)
-        :return: None
-        """
+    :param journal: the journal to import to
+    :param soup: the BeautifulSoup object of the OAI feed
+    :param domain: the domain of the journal (for extracing thumbnails)
+    :return: None
+    """
 
     thumb_path = get_thumbnails(domain)
 
@@ -123,4 +121,4 @@ def import_oai(journal, user, soup, domain):
         if identifier.contents[0].startswith('http'):
             print('Parsing {0}'.format(identifier.contents[0]))
 
-            import_article(journal, user, identifier.contents[0], thumb_path)
+            import_article(journal, identifier.contents[0], thumb_path)
