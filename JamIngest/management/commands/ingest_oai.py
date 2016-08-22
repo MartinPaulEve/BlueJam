@@ -1,6 +1,7 @@
 from django.core.management.base import BaseCommand
 
 from JamIngest import importer, models
+from JamStore import models as JamModels
 
 
 class Command(BaseCommand):
@@ -12,15 +13,23 @@ class Command(BaseCommand):
         """Imports an OAI feed into Revista.
 
         :param args: None
-        :param options: Dictionary containing 'url', 'journal_id', 'user_id', and a boolean '--delete' flag
+        :param options: None
         :return: None
         """
 
-        jams = models.JamSource.objects.filter(source_type='OAI')
+        jam_sources = models.JamSource.objects.filter(source_type='OAI')
 
-        for jam in jams:
+        for jam_source in jam_sources:
 
-            jam_dict = {'url': jam.url,
-                        'issn': jam.issn}
+            if jam_source.target_type == 'journal':
+                journal, created = JamModels.JamJournal.objects.get_or_create(journal_issn=jam_source.issn,
+                                                                                journal_name=jam_source.source_name)
+
+                if created:
+                    print('Created new JamJournal container: \'{0}\''.format(jam_source.source_name))
+
+            jam_dict = {'url': jam_source.url,
+                        'journal': journal,
+                        'jam_source': jam_source}
 
             importer.import_oai(**jam_dict)

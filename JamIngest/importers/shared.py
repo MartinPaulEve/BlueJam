@@ -59,13 +59,12 @@ def fetch_images_and_rewrite_xml_paths(base, root, contents, article):
                 # store this image in the database affiliated with the new article
                 new_file = add_file(mime, '', 'Galley image', filename, article, False)
                 absolute_new_filename = reverse('article_file_download',
-                                                kwargs={'identifier_type': 'id', 'identifier': article.id,
-                                                        'file_id': new_file.id})
+                                                kwargs={'identifier': article.id, 'file_id': new_file.id})
 
                 # rewrite the HTML or XML contents to point to the new image filename (a reverse lookup of
                 # article_file_download)
                 print('Replacing image URL {0} with {1}'.format(url, absolute_new_filename))
-                contents = contents.replace(url, absolute_new_filename)
+                contents = str(contents).replace(url, absolute_new_filename)
 
     return contents
 
@@ -136,6 +135,9 @@ def fetch_file(base, url, root, extension, article, handle_images=False):
         if handle_images:
             resp = fetch_images_and_rewrite_xml_paths(base, root, resp, article)
 
+        if type(resp) is str:
+            resp = bytes(resp)
+
         f.write(resp)
 
     # return the filename and MIME type
@@ -198,8 +200,6 @@ def add_file(file_mime, extension, description, filename, article, galley=True, 
         uuid_filename=filename,
         label=extension.upper(),
         description=description,
-        is_galley=galley,
-        privacy='public',
     )
 
     if thumbnail:
@@ -207,6 +207,7 @@ def add_file(file_mime, extension, description, filename, article, galley=True, 
         article.save()
         return new_file
 
+    new_file.save()
     article.save()
 
     return new_file
@@ -256,7 +257,7 @@ def extract_and_check_doi(soup_object):
     doi = get_soup(soup_object.find('meta', attrs={'name': 'citation_doi'}), 'content')
 
     if doi:
-        identifier = models.Jam.objects.get(doi=doi)
+        identifier = models.Jam.objects.filter(doi=doi)
 
         if identifier:
             print('DOI {0} already imported. Skipping.'.format(doi))
@@ -327,7 +328,6 @@ def create_new_article(date_published, date_submitted, journal, soup_object):
     article_dict = {
         'title': get_soup(soup_object.find('meta', attrs={'name': 'DC.Title'}), 'content'),
         'abstract': get_soup(soup_object.find('meta', attrs={'name': 'DC.Description'}), 'content', ''),
-        'language': get_soup(soup_object.find('meta', attrs={'name': 'DC.Language'}), 'content'),
         'date_published': date_published,
         'date_submitted': date_submitted,
         'journal': journal,

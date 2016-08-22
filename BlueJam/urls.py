@@ -15,7 +15,10 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
+from JamAPI import views
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+    url(r'^article/(?P<identifier>.+)/file/(?P<file_id>\d+)/$', views.serve_article_file,
+        name='article_file_download'),
 ]

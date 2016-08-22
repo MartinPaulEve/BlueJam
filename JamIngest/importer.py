@@ -25,7 +25,7 @@ def import_ojs_article(**options):
     :param options: a dictionary containing 'journal_id' and a 'url'
     :return: None
     """
-    journal = models.JamJournal.objects.get(pk=options['journal_id'])
+    journal = options['journal']
     url = options['url']
 
     ojs.import_article(journal, url)
@@ -37,7 +37,7 @@ def import_up_article(**options):
     :param options: a dictionary containing 'journal_id' and a 'url'
     :return: None
     """
-    journal = models.JamJournal.objects.get(pk=options['journal_id'])
+    journal = options['journal']
     url = options['url']
 
     up.import_article(journal, url)
@@ -49,7 +49,7 @@ def import_oai(**options):
     :param options: a dictionary containing 'journal_id' and 'url'
     :return: None
     """
-    journal = models.JamJournal.objects.get(pk=options['journal_id'])
+    journal = options['journal']
 
     verb = '?verb=ListRecords&metadataPrefix=oai_dc'
     url = options['url'] + verb

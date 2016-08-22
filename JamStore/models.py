@@ -27,6 +27,7 @@ class Jam(models.Model):
     url = models.CharField(max_length=1000, blank=True, null=True)
     issue = models.IntegerField(default=1)
     volume = models.IntegerField(default=1)
+    journal = models.ForeignKey('JamJournal')
 
     # this is a local identifier so that different instances of BlueJam can easily distinguish duplicates
     jam_id = models.CharField(max_length=1000, blank=True, null=True)

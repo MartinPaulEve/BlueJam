@@ -28,5 +28,5 @@ class Command(BaseCommand):
         :return: None
         """
         models.JamSource(url=options['url'], source_type=options['type'], issn=options['issn'],
-                         journal_name=options['source name'], target_type=options['target type']).save()
+                         source_name=options['source name'], target_type=options['target type']).save()
         print("Done.")
