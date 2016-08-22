@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand
 
-from JamIngest import importer
+from JamIngest import importer, models
 
 
 class Command(BaseCommand):
@@ -15,4 +15,12 @@ class Command(BaseCommand):
         :param options: Dictionary containing 'url', 'journal_id', 'user_id', and a boolean '--delete' flag
         :return: None
         """
-        importer.import_oai(**options)
+
+        jams = models.JamSource.objects.filter(source_type='OAI')
+
+        for jam in jams:
+
+            jam_dict = {'url': jam.url,
+                        'issn': jam.issn}
+
+            importer.import_oai(**jam_dict)

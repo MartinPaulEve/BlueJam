@@ -18,7 +18,7 @@ class Command(BaseCommand):
         sources = models.JamSource.objects.all()
 
         for source in sources:
-            print('[{0}]: {1}, {2}, {3}, {4}'.format(source.id, source.journal_name, source.issn, source.source_type,
+            print('[{0}]: {1}, {2}, {3}, {4}'.format(source.id, source.source_name, source.issn, source.source_type,
                                                      source.url))
 
         print("Done.")

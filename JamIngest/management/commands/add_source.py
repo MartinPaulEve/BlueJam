@@ -17,7 +17,8 @@ class Command(BaseCommand):
         parser.add_argument('url')
         parser.add_argument('type')
         parser.add_argument('issn')
-        parser.add_argument('journal name')
+        parser.add_argument('source name')
+        parser.add_argument('target type')
 
     def handle(self, *args, **options):
         """Imports an OAI feed into Revista.
@@ -27,5 +28,5 @@ class Command(BaseCommand):
         :return: None
         """
         models.JamSource(url=options['url'], source_type=options['type'], issn=options['issn'],
-                         journal_name=options['journal name']).save()
+                         journal_name=options['source name'], target_type=options['target type']).save()
         print("Done.")
