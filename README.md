@@ -1,5 +1,5 @@
 #About BlueJam
-BlueJam is a digital preservation system for open-access schoarly material. It is licensed under the GPL version 3.0.
+BlueJam is a digital preservation system for open-access scholarly material. It is licensed under the GPL version 3.0.
 
 BlueJam is designed to be simple to setup and configure. The software will be distributed in a form that will make it easy for new clients to join the main international network. BlueJam can also be run as a separate, segmented network, although for simplicity it operates on a "no security" model and only handles open-access, openly licensed material.
 
