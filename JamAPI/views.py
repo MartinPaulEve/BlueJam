@@ -16,7 +16,9 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with BlueJam.  If not, see <http://www.gnu.org/licenses/>.
 '''
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
+from django.core import serializers
 
 from JamStore import files, models
 
@@ -34,3 +36,23 @@ def serve_article_file(request, identifier, file_id):
     file_object = get_object_or_404(models.JamFile, pk=file_id)
 
     return files.serve_file(request, file_object, article_object)
+
+
+def clone_journals(request):
+    data = serializers.serialize('xml', models.JamJournal.objects.all())
+    return HttpResponse(data, content_type='text/xml')
+
+
+def clone_licences(request):
+    data = serializers.serialize('xml', models.JamLicense.objects.all())
+    return HttpResponse(data, content_type='text/xml')
+
+
+def clone_jams(request):
+    data = serializers.serialize('xml', models.Jam.objects.all())
+    return HttpResponse(data, content_type='text/xml')
+
+
+def clone_files(request):
+    data = serializers.serialize('xml', models.JamFile.objects.all())
+    return HttpResponse(data, content_type='text/xml')
