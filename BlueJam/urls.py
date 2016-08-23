@@ -21,8 +21,8 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^article/(?P<identifier>.+)/file/(?P<file_id>\d+)/$', views.serve_article_file,
         name='article_file_download'),
-    url(r'^clone/journals/$', views.clone_journals(), name='clone_journals'),
-    url(r'^clone/licences/$', views.clone_licences(), name='clone_licences'),
-    url(r'^clone/jams/$', views.clone_jams(), name='clone_jams'),
-    url(r'^clone/files/$', views.clone_files(), name='clone_files'),
+    url(r'^clone/journals/$', views.clone_journals, name='clone_journals'),
+    url(r'^clone/licences/$', views.clone_licences, name='clone_licences'),
+    url(r'^clone/jams/$', views.clone_jams, name='clone_jams'),
+    url(r'^clone/files/$', views.clone_files, name='clone_files'),
 ]
