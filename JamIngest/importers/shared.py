@@ -1,4 +1,4 @@
-'''
+"""
 Copyright (c) Martin Paul Eve 2016
 
 This file is part of BlueJam.
@@ -15,7 +15,7 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with BlueJam.  If not, see <http://www.gnu.org/licenses/>.
-'''
+"""
 import codecs
 import os
 from datetime import datetime
@@ -75,7 +75,7 @@ def fetch_images_and_rewrite_xml_paths(base, root, contents, article):
                 mime = mime.split(',')[0][1:].replace("'", "")
 
                 # store this image in the database affiliated with the new article
-                new_file = add_file(mime, '', 'Galley image', filename, article, False)
+                new_file = add_file(mime, '', 'Galley image', filename, article)
                 absolute_new_filename = reverse('article_file_download',
                                                 kwargs={'identifier': article.id, 'file_id': new_file.id})
 
@@ -154,7 +154,7 @@ def fetch_file(base, url, root, extension, article, handle_images=False):
             resp = fetch_images_and_rewrite_xml_paths(base, root, resp, article)
 
         if type(resp) is str:
-            resp = bytes(resp)
+            resp = bytes(resp, 'utf8')
 
         f.write(resp)
 
@@ -193,12 +193,15 @@ def save_file(base, contents, root, extension, article, handle_images=False):
         if handle_images:
             contents = fetch_images_and_rewrite_xml_paths(base, root, contents, article)
 
+        if type(contents) is str:
+            contents = bytes(contents, 'utf8')
+
         f.write(contents)
 
     return filename
 
 
-def add_file(file_mime, extension, description, filename, article, galley=True, thumbnail=False):
+def add_file(file_mime, extension, description, filename, article):
     """ Add a file to the File model in core. Saves a file to the database affiliated with an article.
 
     :param file_mime: the MIME type of the file. Used in serving the file back to users
@@ -206,8 +209,6 @@ def add_file(file_mime, extension, description, filename, article, galley=True, 
     :param description: a description of the file
     :param filename: the filename
     :param article: the article with which the file is associated
-    :param galley: whether or not this is a galley file
-    :param thumbnail: whether or not this is a thumbnail
     :return: the new File object
     """
 
@@ -219,11 +220,6 @@ def add_file(file_mime, extension, description, filename, article, galley=True, 
         label=extension.upper(),
         description=description,
     )
-
-    if thumbnail:
-        article.thumbnail_image_file = new_file
-        article.save()
-        return new_file
 
     new_file.save()
     article.save()

@@ -97,7 +97,7 @@ def save_file_to_article(file_to_handle, article):
 
     file_mime = guess_mime(filename)
 
-    new_file = models   .JamFile(
+    new_file = models.JamFile(
         mime_type=file_mime,
         original_filename=original_filename,
         uuid_filename=filename,

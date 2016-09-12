@@ -21,8 +21,6 @@ import os
 from django.conf import settings
 from django.db import models
 
-from JamStore import files
-
 JAM_TYPES = (
     ('Article', 'Article'),
     ('Book', 'Book'),
@@ -102,6 +100,7 @@ class JamFile(models.Model):
     description = models.TextField(null=True, blank=True)
 
     def get_file(self, article):
+        from JamStore import files
         return files.get_file(self, article)
 
     def get_file_path(self, article):
